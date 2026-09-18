@@ -45,7 +45,7 @@ jobs:
             "Fit": true,
             "Json": false,
             "Tcx": false,
-            "SaveLocalCopy": ${{ github.event.inputs.saveLocalCopy || false }},
+            "SaveLocalCopy": true # ${{ github.event.inputs.saveLocalCopy || false }},
             "IncludeTimeInHRZones": false,
             "IncludeTimeInPowerZones": false,
             "StackedWorkouts": {
@@ -57,7 +57,7 @@ jobs:
             "NumWorkoutsToDownload": ${{ github.event.inputs.workoutsToDownload || env.DEFAULT_WORKOUT_NUM }},
           },
           "Garmin": {
-            "Upload": true,
+            "Upload": false,
             "FormatToUpload": "fit"
           },
           "Observability": {
@@ -77,7 +77,7 @@ jobs:
     
     - name: ▶ Run P2G Sync
       run: /app/ConsoleClient
-      if: ${{ env.P2G_PELOTON__EMAIL && env.P2G_PELOTON__PASSWORD && env.P2G_GARMIN__EMAIL && env.P2G_GARMIN__PASSWORD }}
+      if: ${{ env.P2G_PELOTON__EMAIL && env.P2G_PELOTON__PASSWORD }}
       working-directory: /app
       env:
         P2G_PELOTON__EMAIL: ${{ secrets.P2G_PELOTON__EMAIL }}
@@ -88,7 +88,7 @@ jobs:
 
     - name: ⤴ Upload output directory
       uses: actions/upload-artifact@v4
-      if: ${{ github.event.inputs.saveLocalCopy == 'true' }}
+      # if: ${{ github.event.inputs.saveLocalCopy == 'true' }}
       with:
         name: output
         path: ${{ env.OUTPUT_DIR }}
